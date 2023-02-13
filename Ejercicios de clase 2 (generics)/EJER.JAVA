@@ -1,64 +1,54 @@
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Iterator;
 
-public class MyArray<T> implements Comparable<MyArray<T>>, Iterable<T> {
-    private T[] array;
-    private int pointer;
+public class MiArray<T extends Comparable<T>> implements Iterable<T> {
+    private T[] lista;
+    private int puntero;
 
-    public MyArray() {
-        this.array = (T[]) new Object[50];
-        this.pointer = 0;
+    public MiArray() {
+        this(50);
     }
 
-    public void add(T value) {
-        if (pointer == array.length) {
-            array = Arrays.copyOf(array, array.length * 2);
+    public MiArray(int tamaño) {
+        lista = (T[]) new Comparable[tamaño];
+        puntero = -1;
+    }
+
+    public void agregar(T elemento) {
+        if (puntero == lista.length - 1) {
+            redimensionar();
         }
-        array[pointer++] = value;
+        lista[++puntero] = elemento;
     }
 
-    public T remove() {
-        if (pointer == 0) {
+    public T eliminar() {
+        if (puntero < 0) {
             return null;
         }
-        return array[--pointer];
+        return lista[puntero--];
+    }
+
+    private void redimensionar() {
+        T[] nuevaLista = (T[]) new Comparable[lista.length * 2];
+        System.arraycopy(lista, 0, nuevaLista, 0, lista.length);
+        lista = nuevaLista;
     }
 
     @Override
-    public int compareTo(MyArray<T> o) {
-        return Integer.compare(pointer, o.pointer);
+    public Iterator<T> iterator() {
+        return new IteradorArray();
     }
 
-    @Override
-    public java.util.Iterator<T> iterator() {
-        return new java.util.Iterator<T>() {
-            int index = 0;
+    private class IteradorArray implements Iterator<T> {
+        int actual = 0;
 
-            @Override
-            public boolean hasNext() {
-                return index < pointer;
-            }
-
-            @Override
-            public T next() {
-                return array[index++];
-            }
-        };
-    }
-
-    public void sort(Comparator<T> comparator) {
-        Arrays.sort(array, 0, pointer, comparator);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < pointer; i++) {
-            sb.append(array[i]);
-            if (i < pointer - 1) {
-                sb.append(", ");
-            }
+        @Override
+        public boolean hasNext() {
+            return actual <= puntero;
         }
-        return sb.toString();
+
+        @Override
+        public T next() {
+            return lista[actual++];
+        }
     }
 }

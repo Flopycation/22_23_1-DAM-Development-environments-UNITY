@@ -1,13 +1,14 @@
 public class App {
     public static void main(String[] args) {
-        MyArray<Integer> myArray = new MyArray<>();
-        myArray.add(1);
-        myArray.add(2);
-        myArray.add(3);
-        System.out.println(myArray);
-        System.out.println("Removed: " + myArray.remove());
-        System.out.println(myArray);
-        myArray.sort(Integer::compareTo);
-        System.out.println("Sorted: " + myArray);
+        MiArray<Integer> miArray = new MiArray<>();
+        miArray.agregar(1);
+        miArray.agregar(2);
+        miArray.agregar(3);
+
+        System.out.println("Elemento eliminado: " + miArray.eliminar());
+
+        for (Integer elemento : miArray) {
+            System.out.println(elemento);
+        }
     }
 }
